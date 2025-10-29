@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy static/ to GitHub Pages
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (optional)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Prepare Pages artifact
+        run: |
+          # The site is already prepared in the static/ directory. If you have a build step,
+          # run it here and copy the output to ./static or update this path.
+          ls -la static
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: static
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
