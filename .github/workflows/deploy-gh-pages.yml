@@ -1,0 +1,29 @@
+name: Deploy static to gh-pages
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (optional)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Ensure static exists
+        run: |
+          if [ ! -d static ]; then echo "static/ directory not found"; exit 1; fi
+          ls -la static | sed -n '1,200p'
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./static
+          publish_branch: gh-pages
